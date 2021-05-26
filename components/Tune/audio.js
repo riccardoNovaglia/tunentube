@@ -68,6 +68,9 @@ export function useGetAudio(onAudio) {
     startRecording,
     stopRecording,
     recording,
-    gainNode,
+    volumeGain: {
+      volumeGain: gainNode ? gainNode.gain.value : 0,
+      setVolumeGain: (value) => (gainNode ? (gainNode.gain.value = value) : {}),
+    },
   };
 }

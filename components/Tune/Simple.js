@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import ReactSpeedometer from "react-d3-speedometer";
 import { useGetAudio } from "./audio";
 import { Mics } from "./Mics";
 import { getNote } from "./Tuner";
@@ -15,7 +14,11 @@ export function Simple() {
     }
   }, []);
 
-  const { startRecording, stopRecording, gainNode } = useGetAudio(onAudio);
+  const {
+    startRecording,
+    stopRecording,
+    volumeGain: { volumeGain, setVolumeGain },
+  } = useGetAudio(onAudio);
 
   return (
     <>
@@ -39,17 +42,8 @@ export function Simple() {
         name="gain"
         min={0}
         max={5}
-        value={gainNode ? gainNode.gain.value : 0}
-        onChange={(event) => {
-          gainNode ? (gainNode.gain.value = event.target.value) : null;
-        }}
-      />
-      <ReactSpeedometer
-        fluidWidth={true}
-        minValue={100}
-        maxValue={500}
-        value={473}
-        needleColor="steelblue"
+        value={volumeGain}
+        onChange={(event) => setVolumeGain(event.target.value)}
       />
     </>
   );
