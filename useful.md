@@ -7,6 +7,9 @@
 [mdn media thing](https://github.com/mdn/web-dictaphone)
 [Media Recorder](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder)
 [react tuner](https://github.com/gabergg/react-tuner)
+[ml5 pitch detection](https://learn.ml5js.org/#/reference/pitch-detection)
+[npm ml5](https://www.npmjs.com/package/ml5)
+[npm p5](https://www.npmjs.com/package/p5)
 
 # Tube
 

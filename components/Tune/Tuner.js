@@ -1,6 +1,9 @@
 import PitchFinder from "pitchfinder";
 
-const pitchFinder = new PitchFinder.YIN();
+const pitchFinder = new PitchFinder.AMDF({
+  maxFrequency: 800,
+  minFrequency: 1,
+});
 
 const allNotes = [
   "C",
@@ -39,18 +42,16 @@ function getCents(frequency, note) {
 }
 
 export function getNote(data) {
-  const frequency = pitchFinder(data);
-  if (frequency) {
-    const note = getNoteFrequency(frequency);
-    return (
-      "note",
-      {
-        name: allNotes[note % 12],
-        value: note,
-        cents: getCents(frequency, note),
-        octave: parseInt(note / 12, 10) - 1,
-        frequency,
-      }
-    );
+  const pitch = pitchFinder(data);
+  if (pitch) {
+    const frequency = getNoteFrequency(pitch);
+    return {
+      pitch,
+      name: allNotes[frequency % 12],
+      value: frequency,
+      cents: getCents(pitch, frequency),
+      octave: parseInt(frequency / 12, 10) - 1,
+      frequency,
+    };
   }
 }

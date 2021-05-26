@@ -1,97 +1,56 @@
-import PitchFinder from "pitchfinder";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useState } from "react";
+import ReactSpeedometer from "react-d3-speedometer";
+import { useGetAudio } from "./audio";
 import { Mics } from "./Mics";
 import { getNote } from "./Tuner";
 
-const defaultConfig = {
-  gainThreshold: 0.01,
-  analyserFFTSize: 4096,
-  audioPollInterval: 50,
-};
-
-function getAudioStream(stream) {
-  const audioCtx = new AudioContext();
-
-  const source = audioCtx.createMediaStreamSource(stream);
-
-  const analyser = audioCtx.createAnalyser();
-  analyser.fftSize = 2048;
-  const bufferLength = analyser.frequencyBinCount;
-
-  return { source, audioCtx, analyser };
-}
-
-function startRecording(source, analyser) {
-  source.connect(analyser);
-}
-function startPlaying(analyser, audioCtx) {
-  analyser.connect(audioCtx.destination);
-}
-
 export function Simple() {
-  const [analyser, setAnalyser] = useState();
-  const [streamTracks, setStreamTracks] = useState();
-
   const [mic, setMic] = useState(undefined);
-  const [recording, setRecording] = useState(false);
+  const [note, setNote] = useState(undefined);
 
-  async function startRecord() {
-    console.log({ mic });
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: { deviceId: mic },
-    });
-    const { source, audioCtx, analyser } = getAudioStream(stream);
-    setStreamTracks(stream.getTracks());
-    setAnalyser(analyser);
-    startRecording(source, analyser);
-    startPlaying(analyser, audioCtx);
-    setRecording(true);
-  }
-
-  const memocall = useCallback(() => {
-    something();
-  }, [something]);
-
-  useEffect(() => {
-    recording &&
-      setInterval(() => {
-        memocall();
-      }, defaultConfig.audioPollInterval);
-  }, [recording, memocall, defaultConfig.audioPollInterval]);
-
-  function something() {
-    const dataArray = new Float32Array(analyser.frequencyBinCount);
-    // Can we use the frequency data for a more accurate guess?
-    // this.analyser.getFloatFrequencyData(dataArray);
-    analyser.getFloatTimeDomainData(dataArray);
-    const max = Math.max(...dataArray);
-    console.log(max);
-    if (max > defaultConfig.gainThreshold) {
-      const note = getNote(dataArray);
-      console.log(note);
+  const onAudio = useCallback(function onAudio(audioData) {
+    const note = getNote(audioData);
+    if (note) {
+      setNote(note);
     }
-  }
+  }, []);
 
-  function stopRecording() {
-    analyser.disconnect();
-    streamTracks.forEach((track) => track.stop());
-  }
+  const { startRecording, stopRecording, gainNode } = useGetAudio(onAudio);
 
   return (
     <>
-      <p>Tuning?</p>
-      <button onClick={() => startRecord()}>start?</button>
-      <button onClick={() => stopRecording()}>stop?</button>
-      <button
-        onClick={() => {
-          console.log(analyser);
-          console.log(streamTracks);
-          console.log(mic);
-        }}
-      >
-        check
-      </button>
       <Mics setMic={setMic} />
+      <button onClick={() => startRecording(mic)}>start?</button>
+      <button onClick={() => stopRecording()}>stop?</button>
+      <p>MicID: {mic}</p>
+      {note && <p>{JSON.stringify(note, null, 2)}</p>}
+      <p>Name: {note && note.name}</p>
+      <input
+        type="range"
+        name="note"
+        min={-50}
+        max={50}
+        value={note ? note.cents : 0}
+        onChange={() => {}}
+        disabled
+      />
+      <input
+        type="range"
+        name="gain"
+        min={0}
+        max={5}
+        value={gainNode ? gainNode.gain.value : 0}
+        onChange={(event) => {
+          gainNode ? (gainNode.gain.value = event.target.value) : null;
+        }}
+      />
+      <ReactSpeedometer
+        fluidWidth={true}
+        minValue={100}
+        maxValue={500}
+        value={473}
+        needleColor="steelblue"
+      />
     </>
   );
 }
