@@ -19,7 +19,7 @@ function connectAudio(source, gainNode, analyserNode, destination) {
   analyserNode.connect(destination);
 }
 
-export function useGetAudio(onAudio) {
+export function useAudio(onAudio) {
   const [analyserNode, setAnalyserNode] = useState();
   const [gainNode, setGainNode] = useState();
   const [streamTracks, setStreamTracks] = useState();

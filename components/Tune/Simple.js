@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react";
-import { useGetAudio } from "./audio";
+import { useAudio } from "./useAudio";
 import { Mics } from "./Mics";
-import { getNote } from "./Tuner";
+import { getNote } from "./noteFinder";
 
 export function Simple() {
   const [mic, setMic] = useState(undefined);
@@ -18,14 +18,13 @@ export function Simple() {
     startRecording,
     stopRecording,
     volumeGain: { volumeGain, setVolumeGain },
-  } = useGetAudio(onAudio);
+  } = useAudio(onAudio);
 
   return (
     <>
       <Mics setMic={setMic} />
-      <button onClick={() => startRecording(mic)}>start?</button>
-      <button onClick={() => stopRecording()}>stop?</button>
-      <p>MicID: {mic}</p>
+      <button onClick={() => startRecording(mic)}>Start</button>
+      <button onClick={() => stopRecording()}>Stop</button>
       {note && <p>{JSON.stringify(note, null, 2)}</p>}
       <p>Name: {note && note.name}</p>
       <input
