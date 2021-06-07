@@ -5,20 +5,7 @@ const pitchFinder = new PitchFinder.AMDF({
   minFrequency: 1,
 });
 
-const allNotes = [
-  "C",
-  "C♯",
-  "D",
-  "D♯",
-  "E",
-  "F",
-  "F♯",
-  "G",
-  "G♯",
-  "A",
-  "A♯",
-  "B",
-];
+const allNotes = ["C", "C♯", "D", "D♯", "E", "F", "F♯", "G", "G♯", "A", "A♯", "B"];
 const middleA = 440;
 const semitone = 69;
 
@@ -29,16 +16,13 @@ function getNoteFrequency(frequency) {
 }
 
 // get the musical note's standard frequency
-function getStandardFrequency(note) {
-  // eslint-disable-next-line no-restricted-properties
-  return middleA * Math.pow(2, (note - semitone) / 12);
+function getStandardFrequency(frequency) {
+  return middleA * Math.pow(2, (frequency - semitone) / 12);
 }
 
 // get cents difference between given frequency and musical note's standard frequency
-function getCents(frequency, note) {
-  return Math.floor(
-    (1200 * Math.log(frequency / getStandardFrequency(note))) / Math.log(2)
-  );
+function getCents(pitch, frequency) {
+  return Math.floor((1200 * Math.log(pitch / getStandardFrequency(frequency))) / Math.log(2));
 }
 
 export function getNote(data) {
@@ -48,7 +32,6 @@ export function getNote(data) {
     return {
       pitch,
       name: allNotes[frequency % 12],
-      value: frequency,
       cents: getCents(pitch, frequency),
       octave: parseInt(frequency / 12, 10) - 1,
       frequency,

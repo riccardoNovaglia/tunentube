@@ -1,8 +1,7 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-// import Tune from "../components/Tune/Tune";
+import { Tune } from "../components/Tune/Tune";
 // import Tube from "../components/Tube";
-import { Simple } from "../components/Tune/Simple";
 
 export default function Home() {
   return (
@@ -13,7 +12,7 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1>Tune 'n' Tube</h1>
-        <Simple />
+        <Tune />
         {/* <Tube /> */}
       </main>
 

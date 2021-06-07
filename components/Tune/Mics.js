@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import styles from "./Tune.module.scss";
 
 const cookieName = "preferred-mic";
 
-export function Mics({ setMic }) {
-  const [inputs, setInputs] = useState(undefined);
-  const [selectedMic, setSelectedMic] = useState(undefined);
+export function Mics({ setMic, disabled }) {
+  const [inputs, setInputs] = useState();
+  const [selectedMic, setSelectedMic] = useState();
   const [cookies, setCookie, removeCookie] = useCookies();
   const preferredCookie = cookies[cookieName];
 
@@ -40,14 +41,10 @@ export function Mics({ setMic }) {
   }, [inputs, preferredCookie, removeCookie, selectMic]);
 
   return (
-    <>
-      <label htmlFor="inputs">Inputs</label>
+    <div className={styles.mics}>
+      <label htmlFor="mics">Microphones</label>
       {inputs && (
-        <select
-          id="inputs"
-          onChange={(e) => selectMic(e.target.value)}
-          value={selectedMic}
-        >
+        <select id="mics" onChange={(e) => selectMic(e.target.value)} value={selectedMic} disabled={disabled}>
           {inputs.map((input) => (
             <option key={input.label} value={input.deviceId}>
               {input.label}
@@ -55,6 +52,6 @@ export function Mics({ setMic }) {
           ))}
         </select>
       )}
-    </>
+    </div>
   );
 }

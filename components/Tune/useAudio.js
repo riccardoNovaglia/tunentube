@@ -1,76 +1,93 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 const analyserFFTSize = 4096;
-const audioPollInterval = 50;
 
-function getAudio(stream) {
+const blankAudioComponents = {
+  audioCtx: undefined,
+  analyserNode: undefined,
+  gainNode: undefined,
+  streamTracks: [],
+};
+
+function getAudio(stream, volumeGain) {
   const audioCtx = new AudioContext();
   const source = audioCtx.createMediaStreamSource(stream);
   const analyserNode = audioCtx.createAnalyser();
   analyserNode.fftSize = analyserFFTSize;
   const gainNode = audioCtx.createGain();
-  gainNode.gain.value = 2;
+  gainNode.gain.value = volumeGain;
   return { audioCtx, source, gainNode, analyserNode };
 }
 
-function connectAudio(source, gainNode, analyserNode, destination) {
-  source.connect(gainNode);
-  gainNode.connect(analyserNode);
-  analyserNode.connect(destination);
+function connectAudio(nodes) {
+  const filtered = nodes.filter((elem) => elem !== undefined);
+  const pairs = filtered.map((node, index) => [node, filtered[index + 1]]);
+  pairs.forEach(([node1, node2]) => {
+    if (node2 === undefined) return;
+
+    node1.connect(node2);
+  });
 }
 
-export function useAudio(onAudio) {
-  const [analyserNode, setAnalyserNode] = useState();
-  const [gainNode, setGainNode] = useState();
-  const [streamTracks, setStreamTracks] = useState();
+function disconnectAudio({ audioCtx, analyserNode, gainNode, streamTracks }) {
+  analyserNode.disconnect();
+  gainNode.disconnect();
+  streamTracks.forEach((track) => track.stop());
+  audioCtx.close();
+}
+
+export function useAudio() {
+  const [audioComponents, setAudioComponents] = useState(blankAudioComponents);
 
   const [recording, setRecording] = useState(false);
-  const [interval, setTheInterval] = useState(undefined);
 
-  async function startRecording(deviceId) {
+  async function startRecording({ deviceId, volumeBoost = false, playback = true }) {
     const stream = await navigator.mediaDevices.getUserMedia({
-      audio: { deviceId },
+      audio: {
+        deviceId,
+        channelCount: 1,
+        echoCancellation: false,
+        noiseSuppression: false,
+        mozNoiseSuppression: false,
+        mozAutoGainControl: false,
+        autoGainControl: false,
+      },
     });
-    const { audioCtx, source, gainNode, analyserNode } = getAudio(stream);
-    setStreamTracks(stream.getTracks());
-    setAnalyserNode(analyserNode);
-    setGainNode(gainNode);
+    const { audioCtx, source, gainNode, analyserNode } = getAudio(stream, volumeBoost ? 2 : 1);
+    connectAudio([source, analyserNode, playback ? audioCtx.destination : undefined]);
 
-    connectAudio(source, gainNode, analyserNode, audioCtx.destination);
+    setAudioComponents({
+      audioCtx,
+      analyserNode,
+      gainNode,
+      streamTracks: stream.getTracks(),
+    });
 
-    const interval = setInterval(() => {
-      const dataArray = new Float32Array(analyserNode.frequencyBinCount);
-      analyserNode.getFloatTimeDomainData(dataArray);
-      onAudio(dataArray);
-    }, audioPollInterval);
-    setTheInterval(interval);
+    setRecording(true);
   }
 
-  const stopRecording = useCallback(() => {
-    console.log("stopping recording!");
-    analyserNode.disconnect();
-    gainNode.disconnect();
-    streamTracks.forEach((track) => track.stop());
+  function stopRecording() {
+    disconnectAudio(audioComponents);
+    setAudioComponents(blankAudioComponents);
     setRecording(false);
-    window.clearInterval(interval);
-    setTheInterval(undefined);
-  }, [analyserNode, gainNode, interval, streamTracks]);
+  }
 
-  useEffect(() => {
-    return () => {
-      if (interval) {
-        stopRecording();
+  const getAudioData = useCallback(
+    function getAudioData() {
+      if (recording) {
+        const analyserNode = audioComponents.analyserNode;
+        const dataArray = new Float32Array(analyserNode.frequencyBinCount);
+        analyserNode.getFloatTimeDomainData(dataArray);
+        return dataArray;
       }
-    };
-  }, [interval, stopRecording]);
+    },
+    [audioComponents.analyserNode, recording]
+  );
 
   return {
     startRecording,
     stopRecording,
+    getAudioData,
     recording,
-    volumeGain: {
-      volumeGain: gainNode ? gainNode.gain.value : 0,
-      setVolumeGain: (value) => (gainNode ? (gainNode.gain.value = value) : {}),
-    },
   };
 }
