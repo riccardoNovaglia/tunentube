@@ -13,6 +13,7 @@ export default function Tube() {
   const playerRef = useRef();
 
   function onProgress({ playedSeconds }) {
+    setCurrent(playedSeconds);
     if (playedSeconds >= end) {
       goTo(start);
     }
