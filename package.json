@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@reach/slider": "0.15.0",
     "next": "10.2.3",
     "pitchfinder": "2.3.1",
     "rc-switch": "3.2.2",
