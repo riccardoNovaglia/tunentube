@@ -9,24 +9,19 @@ const blankAudioComponents = {
   streamTracks: [],
 };
 
-function getAudio(stream, volumeGain) {
+function getAudio(stream) {
   const audioCtx = new AudioContext();
   const source = audioCtx.createMediaStreamSource(stream);
   const analyserNode = audioCtx.createAnalyser();
   analyserNode.fftSize = analyserFFTSize;
   const gainNode = audioCtx.createGain();
-  gainNode.gain.value = volumeGain;
+  gainNode.gain.value = 2;
   return { audioCtx, source, gainNode, analyserNode };
 }
 
-function connectAudio(nodes) {
-  const filtered = nodes.filter((elem) => elem !== undefined);
-  const pairs = filtered.map((node, index) => [node, filtered[index + 1]]);
-  pairs.forEach(([node1, node2]) => {
-    if (node2 === undefined) return;
-
-    node1.connect(node2);
-  });
+function connectAudio(source, gain, analyser) {
+  source.connect(gain);
+  gain.connect(analyser);
 }
 
 function disconnectAudio({ audioCtx, analyserNode, gainNode, streamTracks }) {
@@ -36,12 +31,12 @@ function disconnectAudio({ audioCtx, analyserNode, gainNode, streamTracks }) {
   audioCtx.close();
 }
 
-export function useAudio() {
+export function useAudioAnalyser() {
   const [audioComponents, setAudioComponents] = useState(blankAudioComponents);
 
   const [recording, setRecording] = useState(false);
 
-  async function startRecording({ deviceId, volumeBoost = false, playback = true }) {
+  async function startRecording({ deviceId }) {
     const stream = await navigator.mediaDevices.getUserMedia({
       audio: {
         deviceId,
@@ -53,8 +48,8 @@ export function useAudio() {
         autoGainControl: false,
       },
     });
-    const { audioCtx, source, gainNode, analyserNode } = getAudio(stream, volumeBoost ? 2 : 1);
-    connectAudio([source, analyserNode, playback ? audioCtx.destination : undefined]);
+    const { audioCtx, source, gainNode, analyserNode } = getAudio(stream);
+    connectAudio(source, gainNode, analyserNode);
 
     setAudioComponents({
       audioCtx,
