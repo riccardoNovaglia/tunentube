@@ -1,40 +1,10 @@
 .tube {
 }
 
-.playerAndControls {
-  padding-right: 15px;
-  padding-bottom: 15px;
+.player {
+  margin: 20px 0;
 }
 
-.playerAndVolume {
-  display: flex;
-  flex-direction: row;
-}
-
-.playerAndDuration {
-  display: flex;
-  flex-direction: column;
-}
-
-.volume {
-  margin: 0 15px;
-}
-
-.volumeHidden {
-  @extend .volume;
-  visibility: hidden;
-}
-
-.progress {
-  margin-top: 15px;
-}
-
-.progressHidden {
-  @extend .progress;
-  visibility: hidden;
-}
-
-.tubeControls {
-  display: flex;
-  flex-direction: column;
+.activeChapter {
+  color: red;
 }

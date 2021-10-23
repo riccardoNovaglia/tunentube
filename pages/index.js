@@ -8,7 +8,7 @@ import { Tunes } from "../components/Tunes/Tunes";
 import styles from "../styles/Home.module.css";
 
 export default function Home({ videos }) {
-  const [video, setVideo] = useState(undefined);
+  const [video, setVideo] = useState(videos[0].url);
   return (
     <div className={styles.container}>
       <Head>
