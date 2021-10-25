@@ -1,6 +1,8 @@
 import { useState } from "react";
 
-import styles from "./Tube.module.scss";
+import { NewChapter } from "./NewChapter";
+
+import styles from "./Chapters.module.scss";
 
 export function Chapters({ savedChapters = [], onChapterSelected, onChapterUnselected }) {
   const [chaptersVisible, setChaptersVisible] = useState(false);
@@ -28,13 +30,7 @@ export function Chapters({ savedChapters = [], onChapterSelected, onChapterUnsel
 
   return (
     <div>
-      <label htmlFor="chapters">{chaptersVisible ? "Hide Chapters" : "Show Chapters"}</label>
-      <input
-        id="chapters"
-        type="checkbox"
-        value={chaptersVisible}
-        onChange={(e) => setChaptersVisible(e.target.checked)}
-      />
+      <ShowAndHideChapters chaptersVisible={chapters} setChaptersVisible={setChaptersVisible} />
       {chaptersVisible && (
         <>
           <NewChapter onNewChapter={onNewChapter} />
@@ -55,39 +51,26 @@ export function Chapters({ savedChapters = [], onChapterSelected, onChapterUnsel
   );
 }
 
+function ShowAndHideChapters({ chaptersVisible, setChaptersVisible }) {
+  return (
+    <>
+      <label htmlFor="chapters">{chaptersVisible ? "Hide Chapters" : "Show Chapters"}</label>
+      <input
+        id="chapters"
+        type="checkbox"
+        value={chaptersVisible}
+        onChange={(e) => setChaptersVisible(e.target.checked)}
+      />
+    </>
+  );
+}
+
 function Chapter({ chapter, onChapterTrigger, selected }) {
   return (
     <li className={selected ? styles.activeChapter : styles.chapter}>
       {chapter.name}: {chapter.start}-{chapter.end}
       <button onClick={() => onChapterTrigger(chapter)}>{selected ? "Unselect" : "Select"}</button>
     </li>
-  );
-}
-
-function NewChapter({ onNewChapter }) {
-  function onSubmit(event) {
-    event.preventDefault();
-    const [{ value: start }, { value: end }, { value: name }] = event.target;
-    onNewChapter({ start, end, name, id: `${start}-${end}-${name}` });
-  }
-
-  return (
-    <form onSubmit={onSubmit}>
-      <label>
-        Start
-        <input type="float" id="start" />
-      </label>
-      <label>
-        End
-        <input type="float" id="end" />
-      </label>
-      <label>
-        Name
-        <input type="text" id="name" />
-      </label>
-
-      <input type="submit" value="Save" />
-    </form>
   );
 }
 
