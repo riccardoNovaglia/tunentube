@@ -1,6 +1,6 @@
 {
   "parser": "babel-eslint",
-  "plugins": ["react"],
+  "plugins": ["react", "jest"],
   "env": {
     "browser": true,
     "commonjs": true,
@@ -11,9 +11,5 @@
     "react/prop-types": "off",
     "react/no-unescaped-entities": "off"
   },
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended",
-    "plugin:react-hooks/recommended"
-  ]
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:react-hooks/recommended"]
 }

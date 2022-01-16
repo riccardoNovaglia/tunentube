@@ -10,44 +10,58 @@ export function Chapters({ savedChapters = [], onChapterSelected, onChapterUnsel
   const [activeChapter, setActiveChapter] = useState();
 
   function onNewChapter(newChapter) {
-    function chapterWithSameStartAndEnd(chapter) {
-      return chapter.start === newChapter.start && chapter.end === newChapter.end;
-    }
-    if (chapters.some(chapterWithSameStartAndEnd)) return;
+    if (chapters.some((chap) => chap.isEqualTo(newChapter))) return;
 
-    setChapters([...chapters, newChapter].sort(sortByStartAndEnd));
-  }
-
-  function onChapterTrigger(chapter) {
-    if (chapter === activeChapter) {
-      setActiveChapter(undefined);
-      onChapterUnselected();
-    } else {
-      setActiveChapter(chapter);
-      onChapterSelected(chapter);
-    }
+    setChapters([...chapters, newChapter].sort((c1, c2) => c1.minus(c2)));
   }
 
   return (
     <div>
-      <ShowAndHideChapters chaptersVisible={chapters} setChaptersVisible={setChaptersVisible} />
+      <ShowAndHideChapters chaptersVisible={chaptersVisible} setChaptersVisible={setChaptersVisible} />
       {chaptersVisible && (
         <>
           <NewChapter onNewChapter={onNewChapter} />
-          <ul>
-            {chapters.map((chapter) => (
-              <Chapter
-                key={chapter.id}
-                chapter={chapter}
-                selected={activeChapter?.id === chapter.id}
-                onChapterTrigger={onChapterTrigger}
-              />
-            ))}
-          </ul>
+          <ChaptersList
+            chapters={chapters}
+            activeChapter={activeChapter}
+            onSelection={(chapter) => {
+              setActiveChapter(chapter);
+              onChapterSelected(chapter);
+            }}
+            onUnselection={() => {
+              setActiveChapter(undefined);
+              onChapterUnselected();
+            }}
+          />
           <button onClick={() => setChapters([])}>Clear</button>
         </>
       )}
     </div>
+  );
+}
+
+function ChaptersList({ chapters, activeChapter, onSelection, onUnselection }) {
+  function onChapterTrigger(chapter) {
+    if (chapter === activeChapter) {
+      onUnselection();
+    } else {
+      onSelection(chapter);
+    }
+  }
+
+  return (
+    <ul>
+      {chapters.map((chapter) => {
+        return (
+          <Chapter
+            key={chapter.key}
+            chapter={chapter}
+            selected={activeChapter?.key === chapter.key}
+            onChapterTrigger={onChapterTrigger}
+          />
+        );
+      })}
+    </ul>
   );
 }
 
@@ -68,12 +82,10 @@ function ShowAndHideChapters({ chaptersVisible, setChaptersVisible }) {
 function Chapter({ chapter, onChapterTrigger, selected }) {
   return (
     <li className={selected ? styles.activeChapter : styles.chapter}>
-      {chapter.name}: {chapter.start}-{chapter.end}
+      <p>
+        {chapter.name}: {chapter.start}-{chapter.end}
+      </p>
       <button onClick={() => onChapterTrigger(chapter)}>{selected ? "Unselect" : "Select"}</button>
     </li>
   );
-}
-
-function sortByStartAndEnd(c1, c2) {
-  return c1.start !== c2.start ? c1.start - c2.start : c1.end - c2.end;
 }

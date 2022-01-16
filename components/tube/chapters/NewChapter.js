@@ -1,26 +1,58 @@
+import { useState } from "react";
+
 export function NewChapter({ onNewChapter }) {
+  const [chapter, setChapter] = useState({});
+
   function onSubmit(event) {
     event.preventDefault();
-    const [{ value: start }, { value: end }, { value: name }] = event.target;
-    onNewChapter({ start, end, name, id: `${start}-${end}-${name}` });
+    const { start, end, name } = chapter;
+    onNewChapter(new Chapter(start, end, name));
+    setChapter({});
+  }
+
+  function update(e) {
+    setChapter({
+      ...chapter,
+      [e.target.name]: e.target.value,
+    });
   }
 
   return (
     <form onSubmit={onSubmit}>
       <label>
         Start
-        <input type="float" id="start" />
+        <input type="float" name="start" value={chapter?.start || ""} onChange={update} />
       </label>
       <label>
         End
-        <input type="float" id="end" />
+        <input type="float" name="end" value={chapter?.end || ""} onChange={update} />
       </label>
       <label>
         Name
-        <input type="text" id="name" />
+        <input type="text" name="name" value={chapter?.name || ""} onChange={update} />
       </label>
 
-      <input type="submit" value="Save" />
+      <button type="submit">Save </button>
     </form>
   );
+}
+
+export class Chapter {
+  constructor(start, end, name) {
+    this.start = Number.parseFloat(start);
+    this.end = Number.parseFloat(end);
+    this.name = name;
+  }
+
+  get key() {
+    return `${this.start}-${this.end}-${this.name}`;
+  }
+
+  isEqualTo(another) {
+    return this.start === another?.start && this.end === another?.end;
+  }
+
+  minus(another) {
+    return this.start !== another.start ? this.start - another.start : this.end - another.end;
+  }
 }

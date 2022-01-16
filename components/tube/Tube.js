@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { Slider } from "@reach/slider";
 
 import ReactPlayer from "react-player/lazy";
 
@@ -6,6 +7,7 @@ import { Chapters } from "./chapters/Chapters";
 import { UrlInput } from "./UrlInput";
 
 import styles from "./Tube.module.scss";
+import "@reach/slider/styles.css";
 
 export default function Tube({ video }) {
   const [videoToPlay, setVideoToPlay] = useState(video);
@@ -15,22 +17,39 @@ export default function Tube({ video }) {
 
   const [loopBounds, setLoopBounds] = useState();
 
+  const [ctrl, setCtrl] = useState(false);
+
   const playerRef = useRef();
+  const fadeInOut = {
+    onFocus: () => setCtrl(true),
+    onBlur: () => setCtrl(false),
+  };
 
   return (
-    <div className={styles.tube}>
+    <div
+      className={styles.tube}
+      style={{
+        "--control-visibility": ctrl ? "100%" : "0%",
+      }}
+      onMouseEnter={() => setCtrl(true)}
+      onMouseLeave={() => setCtrl(false)}
+    >
       <UrlInput setVideoUrl={setVideoToPlay} />
-      <ReactPlayer
-        className={styles.player}
-        ref={playerRef}
-        url={videoToPlay}
-        playing={playing}
-        controls={true}
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-        onProgress={({ playedSeconds }) => loopBounds?.outsideBounds(playedSeconds) && goTo(loopBounds?.getStart())}
-        progressInterval={50}
-      />
+      <div className={styles.playerWrapper}>
+        <ReactPlayer
+          className={styles.player}
+          ref={playerRef}
+          url={videoToPlay}
+          playing={playing}
+          controls={true}
+          onPlay={() => setPlaying(true)}
+          onPause={() => setPlaying(false)}
+          onProgress={({ playedSeconds }) => loopBounds?.outsideBounds(playedSeconds) && goTo(loopBounds?.getStart())}
+          progressInterval={50}
+        />
+        <Slider orientation="vertical" className={styles.volume} {...fadeInOut} />
+        <Slider orientation="horizontal" className={styles.progress} {...fadeInOut} />
+      </div>
 
       <Chapters
         onChapterSelected={({ start, end }) => {
