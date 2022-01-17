@@ -1,37 +1,13 @@
-.playerWrapper {
-  padding: 20px 0;
-  display: grid;
-  grid-template-areas:
-    "player volume"
-    "progress empty";
-
-  & > * {
-    padding: 15px 15px;
-  }
+.tube {
+  display: flex;
+  flex-direction: row;
 }
 
-.fade {
-  transition: all 0.2s;
+.video {
+  flex: 2;
+  height: 100%;
 }
 
-.betterFocus {
-  div:focus {
-    outline: 2px solid rgb(255, 136, 0);
-  }
-}
-
-.volume {
-  @extend .fade, .betterFocus;
-  grid-area: "volume";
-  &[data-reach-slider-input][data-orientation="vertical"] {
-    height: 100%;
-    opacity: var(--control-visibility);
-  }
-}
-
-.progress {
-  @extend .fade, .betterFocus;
-  grid-area: "progress";
-  width: 100%;
-  opacity: var(--control-visibility);
+.videosAndChapters {
+  flex: 1;
 }

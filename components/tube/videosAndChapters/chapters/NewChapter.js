@@ -48,11 +48,19 @@ export class Chapter {
     return `${this.start}-${this.end}-${this.name}`;
   }
 
+  get paragraph() {
+    return `${this.name}: ${this.start}-${this.end}`;
+  }
+
   isEqualTo(another) {
     return this.start === another?.start && this.end === another?.end;
   }
 
   minus(another) {
     return this.start !== another.start ? this.start - another.start : this.end - another.end;
+  }
+
+  outsideBounds(currentTime) {
+    return currentTime < this.start || currentTime >= this.end;
   }
 }

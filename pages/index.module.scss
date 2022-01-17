@@ -1,0 +1,17 @@
+.main {
+  height: 100%;
+  display: grid;
+  grid-template-rows: 50px auto min-content;
+  grid-gap: 20px;
+
+  & > * {
+    margin: 0 10px;
+  }
+}
+
+.title {
+  margin: 0;
+  padding: 10px 10px;
+  background-color: black;
+  color: white;
+}
