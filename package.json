@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@reach/slider": "0.16.0",
+    "@reach/tabs": "0.16.4",
     "@use-it/interval": "1.0.0",
     "next": "12.0.8",
     "pitchfinder": "2.3.2",

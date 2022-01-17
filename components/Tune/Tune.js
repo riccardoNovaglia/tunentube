@@ -12,10 +12,8 @@ export function Tune() {
 
   return (
     <div className={styles.tune}>
-      <div className={styles.controls}>
-        <Mics setMic={setMic} disabled={playing || tuning} />
-        <Playback mic={mic} onPlaying={onPlaying} />
-      </div>
+      <Mics setMic={setMic} disabled={playing || tuning} />
+      <Playback mic={mic} onPlaying={onPlaying} />
       <Tuner mic={mic} onTuning={onTuning} />
     </div>
   );

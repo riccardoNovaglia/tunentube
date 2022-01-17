@@ -7,9 +7,10 @@ export function UrlInput({ setVideoUrl }) {
 
   return (
     <form onSubmit={selectVideo}>
-      <label htmlFor="url">Url</label>
-      <input id="url" type="text" />
-      <label htmlFor="selectVideo">Select</label>
+      <label htmlFor="url">
+        Url <input id="url" type="text" />
+      </label>
+
       <input id="selectVideo" type="submit" />
     </form>
   );

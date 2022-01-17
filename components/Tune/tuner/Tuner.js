@@ -3,10 +3,16 @@ import useInterval from "@use-it/interval";
 import Switch from "rc-switch";
 import { useAudioAnalyser } from "./useSoundAnalyser";
 import { getNote } from "../playback/noteFinder";
+import styles from "../Tune.module.scss";
 
 export function Tuner({ mic, onTuning }) {
   const [note, setNote] = useState(undefined);
-  const { startRecording, stopRecording, getAudioData, recording: analysing } = useAudioAnalyser();
+  const {
+    startRecording,
+    stopRecording,
+    getAudioData,
+    recording: analysing,
+  } = useAudioAnalyser();
 
   useInterval(
     () => {
@@ -30,13 +36,11 @@ export function Tuner({ mic, onTuning }) {
   };
 
   return (
-    <>
-      <div>
-        <label htmlFor="tune">Tune</label>
-        <Switch id="tune" checked={analysing} onChange={toggleTuning} />
-      </div>
+    <div className={styles.tuner}>
+      <label htmlFor="tune">Tune</label>
+      <Switch id="tune" checked={analysing} onChange={toggleTuning} />
       {analysing && <Note note={note} />}
-    </>
+    </div>
   );
 }
 
@@ -49,7 +53,15 @@ export function Note({ note }) {
       <p>Cents: {note.cents}</p>
       <p>Pitch: {Math.round(note.pitch)}</p>
       <p>Frequency: {note.frequency}</p>
-      <input type="range" name="note" min={-50} max={50} value={note.cents} onChange={() => {}} disabled />
+      <input
+        type="range"
+        name="note"
+        min={-50}
+        max={50}
+        value={note.cents}
+        onChange={() => {}}
+        disabled
+      />
     </>
   );
 }
