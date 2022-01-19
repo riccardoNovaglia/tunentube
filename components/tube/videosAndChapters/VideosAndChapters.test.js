@@ -3,22 +3,22 @@ import userEvents from "@testing-library/user-event";
 import { VideosAndChapters } from "./VideosAndChapters";
 
 jest.mock("./chapters/Chapters.js", () => ({
-  Chapters: () => <p tabIndex={0}>I'm chapters</p>,
+  Chapters: () => <p tabIndex={0}>I am chapters</p>,
 }));
 
 jest.mock("./videos/Videos.js", () => ({
-  Videos: () => <p tabIndex={0}>I'm videos</p>,
+  Videos: () => <p tabIndex={0}>I am videos</p>,
 }));
 
 it("renders the chapters by default", async () => {
   const { findCurrentTabContent } = render();
-  expect(await findCurrentTabContent()).toHaveTextContent("I'm chapters");
+  expect(await findCurrentTabContent()).toHaveTextContent("I am chapters");
 });
 
 it("renders the videos after switching to it", async () => {
   const { user, findCurrentTabContent } = render();
   await user.click(await screen.findByRole("tab", { name: "Videos" }));
-  expect(await findCurrentTabContent()).toHaveTextContent("I'm videos");
+  expect(await findCurrentTabContent()).toHaveTextContent("I am videos");
 });
 
 it("moves focus between tabs with arrows and removes tab index from unselected", async () => {
@@ -46,7 +46,7 @@ it("moves focus between tabs with arrows and removes tab index from unselected",
   expect(document.activeElement).toEqual(videosTab);
   await user.keyboard("{ArrowRight}");
   await user.keyboard("{Enter}");
-  expect(await findCurrentTabContent()).toHaveTextContent("I'm chapters");
+  expect(await findCurrentTabContent()).toHaveTextContent("I am chapters");
 });
 
 it("moves focus to panels on tab, and back", async () => {
@@ -55,7 +55,7 @@ it("moves focus to panels on tab, and back", async () => {
   await user.click(videosTab);
 
   await user.keyboard("{Tab}");
-  expect(document.activeElement).toHaveTextContent("I'm videos");
+  expect(document.activeElement).toHaveTextContent("I am videos");
   await user.keyboard("{Shift>}{Tab}{/Shift}");
   expect(document.activeElement).toEqual(videosTab);
 });

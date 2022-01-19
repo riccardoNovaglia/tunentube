@@ -9,11 +9,11 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Tune 'n' Tube</title>
+        <title>Tune &apos;n&apos; Tube</title>
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Tune 'n' Tube</h1>
+        <h1 className={styles.title}>Tune &apos;n&apos; Tube</h1>
         <Tube />
         <Tune />
       </main>

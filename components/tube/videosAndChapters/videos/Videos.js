@@ -5,7 +5,7 @@ import styles from "./Videos.module.scss";
 export function Videos({ setVideo }) {
   useEffect(() => {
     setVideo(videos[0].url);
-  }, []);
+  }, [setVideo]);
 
   if (!videos) return <></>;
 
