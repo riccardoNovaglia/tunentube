@@ -38,7 +38,12 @@ export function Tuner({ mic, onTuning }) {
   return (
     <div className={styles.tuner}>
       <label htmlFor="tune">Tune</label>
-      <Switch id="tune" checked={analysing} onChange={toggleTuning} />
+      <Switch
+        id="tune"
+        aria-label="Start tuning"
+        checked={analysing}
+        onChange={toggleTuning}
+      />
       {analysing && <Note note={note} />}
     </div>
   );

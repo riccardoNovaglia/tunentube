@@ -18,7 +18,12 @@ export function Playback({ mic, onPlaying }) {
   return (
     <div className={styles.playback}>
       <label htmlFor="playback">Playback</label>
-      <Switch id="playback" checked={recording} onChange={toggleRecording} />
+      <Switch
+        id="playback"
+        aria-label="Start playback"
+        checked={recording}
+        onChange={toggleRecording}
+      />
     </div>
   );
 }
