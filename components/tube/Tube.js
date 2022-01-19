@@ -15,11 +15,11 @@ export function Tube() {
 
   return (
     <div className={styles.tube}>
-      {videoToPlay && (
-        <div className={styles.video}>
+      <div className={styles.video}>
+        {videoToPlay && (
           <Player activeChapter={activeChapter} videoToPlay={videoToPlay} />
-        </div>
-      )}
+        )}
+      </div>
       <div className={styles.videosAndChapters}>
         <VideosAndChapters
           setVideoToPlay={setVideoToPlay}

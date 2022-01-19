@@ -39,7 +39,6 @@ export function Player({ videoToPlay, activeChapter }) {
           progressInterval={50}
           width="100%"
           height="100%"
-          light={true}
         />
         {/* TODO: actually control volume and progress, add speed etc */}
         <Slider orientation="vertical" className={styles.volume} {...fadeInOut} />
