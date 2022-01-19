@@ -5,7 +5,7 @@ import { VideosAndChapters } from "./videosAndChapters/VideosAndChapters";
 
 import styles from "./Tube.module.scss";
 
-export default function Tube() {
+export function Tube() {
   const [videoToPlay, setVideoToPlay] = useState();
   const [activeChapter, setActiveChapter] = useState();
 

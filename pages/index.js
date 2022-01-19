@@ -1,6 +1,6 @@
 import Head from "next/head";
 
-import Tube from "../components/Tube/Tube";
+import { Tube } from "../components/tube/Tube";
 import { Tune } from "../components/tune/Tune";
 
 import styles from "./index.module.scss";
