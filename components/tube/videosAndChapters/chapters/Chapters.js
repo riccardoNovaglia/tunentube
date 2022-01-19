@@ -1,44 +1,49 @@
 import { useState } from "react";
 
 import { NewChapter } from "./NewChapter";
+import { Chapter } from "./Chapter.jsx";
 
 import styles from "./Chapters.module.scss";
 
-export function Chapters({ activeChapter, savedChapters = [], onChapterSelected, onChapterUnselected }) {
+export function Chapters({ activeChapter, onChapterTrigger, savedChapters = [] }) {
   const [chapters, setChapters] = useState(savedChapters);
+  const [adding, setAdding] = useState(false);
 
   function onNewChapter(newChapter) {
-    if (chapters.some((chap) => chap.isEqualTo(newChapter))) return;
+    setAdding(false);
+    if (!newChapter || chapters.some((chap) => chap.isEqualTo(newChapter))) return;
 
     setChapters([...chapters, newChapter].sort((c1, c2) => c1.minus(c2)));
   }
-
-  function onChapterTrigger(chapter) {
-    if (chapter === activeChapter) {
-      onChapterUnselected();
-    } else {
-      onChapterSelected(chapter);
-    }
+  function onChapterDeleted(chapter) {
+    chapters.splice(chapters.indexOf(chapter), 1);
+    setChapters([...chapters]);
   }
 
   return (
-    <>
+    <div className={styles.chapters}>
       {chapters.length > 0 ? (
-        <ul>
+        <ul className={styles.chaptersList}>
           {chapters.map((chapter) => (
-            <li className={chapter.isEqualTo(activeChapter) ? styles.activeChapter : styles.chapter} key={chapter.key}>
-              <p>{chapter.paragraph}</p>
-              <button onClick={() => onChapterTrigger(chapter)}>
-                {chapter.isEqualTo(activeChapter) ? "Unselect" : "Select"}
-              </button>
-            </li>
+            <Chapter
+              chapter={chapter}
+              activeChapter={activeChapter}
+              onChapterTrigger={onChapterTrigger}
+              onDelete={onChapterDeleted}
+              key={chapter.key}
+            />
           ))}
         </ul>
       ) : (
         <p>No chapters added, yet</p>
       )}
-      <NewChapter onNewChapter={onNewChapter} />
-      <button onClick={() => setChapters([])}>Clear</button>
-    </>
+      {adding ? (
+        <NewChapter onNewChapter={onNewChapter} />
+      ) : (
+        <button className={styles.addChapter} onClick={() => setAdding(true)}>
+          Add chapter
+        </button>
+      )}
+    </div>
   );
 }

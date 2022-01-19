@@ -1,13 +1,21 @@
 import { useState } from "react";
+import { Chapter } from "./Chapter";
+import styles from "./Chapter.module.scss";
 
 export function NewChapter({ onNewChapter }) {
   const [chapter, setChapter] = useState({});
+  const [error, setError] = useState();
 
   function onSubmit(event) {
     event.preventDefault();
-    const { start, end, name } = chapter;
-    onNewChapter(new Chapter(start, end, name));
-    setChapter({});
+    const newChap = Chapter.fromInput(chapter);
+    const error = newChap.isValid();
+    if (!error) {
+      onNewChapter(newChap);
+      setChapter({});
+    } else {
+      setError(error);
+    }
   }
 
   function update(e) {
@@ -15,10 +23,15 @@ export function NewChapter({ onNewChapter }) {
       ...chapter,
       [e.target.name]: e.target.value,
     });
+    setError();
   }
 
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit} className={styles.newChapter}>
+      <label>
+        Name
+        <input type="text" name="name" value={chapter?.name || ""} onChange={update} />
+      </label>
       <label>
         Start
         <input type="float" name="start" value={chapter?.start || ""} onChange={update} />
@@ -27,40 +40,14 @@ export function NewChapter({ onNewChapter }) {
         End
         <input type="float" name="end" value={chapter?.end || ""} onChange={update} />
       </label>
-      <label>
-        Name
-        <input type="text" name="name" value={chapter?.name || ""} onChange={update} />
-      </label>
 
-      <button type="submit">Save </button>
+      <button className={styles.save} type="submit">
+        Save
+      </button>
+      <button className={styles.cancel} onClick={() => onNewChapter(null)}>
+        Cancel
+      </button>
+      {error && <p className={styles.error}>{error}</p>}
     </form>
   );
-}
-
-export class Chapter {
-  constructor(start, end, name) {
-    this.start = Number.parseFloat(start);
-    this.end = Number.parseFloat(end);
-    this.name = name;
-  }
-
-  get key() {
-    return `${this.start}-${this.end}-${this.name}`;
-  }
-
-  get paragraph() {
-    return `${this.name}: ${this.start}-${this.end}`;
-  }
-
-  isEqualTo(another) {
-    return this.start === another?.start && this.end === another?.end;
-  }
-
-  minus(another) {
-    return this.start !== another.start ? this.start - another.start : this.end - another.end;
-  }
-
-  outsideBounds(currentTime) {
-    return currentTime < this.start || currentTime >= this.end;
-  }
 }

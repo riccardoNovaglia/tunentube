@@ -1,3 +1,27 @@
-.activeChapter {
-  color: red;
+@import "./Chapter.module.scss";
+
+.chapters {
+  display: grid;
+  grid-template-rows: 1fr 60px;
+  grid-gap: 10px;
+  padding: 0 10px;
+}
+
+.chaptersList {
+  margin: 0;
+  padding: 10px 0;
+  max-height: 70vh;
+  overflow-y: scroll;
+}
+
+.chaptersControls {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.addChapter {
+  @extend .chapterControl;
+  background: rgb(0, 150, 0);
 }

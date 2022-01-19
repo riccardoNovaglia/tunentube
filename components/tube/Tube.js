@@ -9,6 +9,10 @@ export default function Tube() {
   const [videoToPlay, setVideoToPlay] = useState();
   const [activeChapter, setActiveChapter] = useState();
 
+  function onChapterTrigger(chapter) {
+    setActiveChapter(chapter === activeChapter ? undefined : chapter);
+  }
+
   return (
     <div className={styles.tube}>
       {videoToPlay && (
@@ -20,7 +24,7 @@ export default function Tube() {
         <VideosAndChapters
           setVideoToPlay={setVideoToPlay}
           activeChapter={activeChapter}
-          setActiveChapter={setActiveChapter}
+          onChapterTrigger={onChapterTrigger}
         />
       </div>
     </div>

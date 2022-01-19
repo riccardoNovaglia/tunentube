@@ -33,7 +33,9 @@ export function Player({ videoToPlay, activeChapter }) {
           controls={true}
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
-          onProgress={({ playedSeconds }) => activeChapter?.outsideBounds(playedSeconds) && goTo(activeChapter?.start)}
+          onProgress={({ playedSeconds }) =>
+            activeChapter?.outsideBounds(playedSeconds) && goTo(activeChapter?.start)
+          }
           progressInterval={50}
           width="100%"
           height="100%"

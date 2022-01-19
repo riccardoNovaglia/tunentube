@@ -6,21 +6,17 @@ import { Videos } from "./videos/Videos";
 import styles from "./VideosAndChapters.module.scss";
 import "@reach/tabs/styles.css";
 
-export function VideosAndChapters({ setVideoToPlay, activeChapter, setActiveChapter }) {
+export function VideosAndChapters({ setVideoToPlay, activeChapter, onChapterTrigger }) {
   return (
-    <Tabs>
-      <TabList className={styles.tabs}>
-        <Tab>Chapters</Tab>
-        <Tab>Videos</Tab>
+    <Tabs className={styles.tabs}>
+      <TabList className={styles.tabsList}>
+        <Tab className={styles.tab}>Chapters</Tab>
+        <Tab className={styles.tab}>Videos</Tab>
       </TabList>
 
       <TabPanels className={styles.panels}>
-        <TabPanel>
-          <Chapters
-            activeChapter={activeChapter}
-            onChapterSelected={(chapter) => setActiveChapter(chapter)}
-            onChapterUnselected={() => setActiveChapter(undefined)}
-          />
+        <TabPanel className={styles.panel}>
+          <Chapters activeChapter={activeChapter} onChapterTrigger={onChapterTrigger} />
         </TabPanel>
         <TabPanel>
           <Videos setVideo={setVideoToPlay} />

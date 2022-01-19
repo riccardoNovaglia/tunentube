@@ -1,16 +1,16 @@
-import { act, render, screen, within } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Chapters } from "./Chapters";
-import { Chapter } from "./NewChapter";
+import { Chapter } from "./Chapter";
 
 it("starts with the given preset chapters", async () => {
-  await renderChapters([new Chapter(12, 21, "abc")]);
+  renderChapters([new Chapter(12, 21, "abc")]);
 
   expect(screen.getByText(/abc: 12-21/i)).toBeInTheDocument();
 });
 
 it("adds a new chapter", async () => {
-  const { createNewChapter } = await renderChapters();
+  const { createNewChapter } = renderChapters();
 
   await createNewChapter("1", "2", "some name");
 
@@ -18,7 +18,7 @@ it("adds a new chapter", async () => {
 });
 
 it("does not add the same chapter twice", async () => {
-  const { createNewChapter } = await renderChapters();
+  const { createNewChapter } = renderChapters();
 
   await createNewChapter("1", "2", "some name");
   await createNewChapter("1", "2", "some name");
@@ -27,72 +27,81 @@ it("does not add the same chapter twice", async () => {
 });
 
 it("orders chapters as they are added", async () => {
-  const { createNewChapter } = await renderChapters();
+  const { createNewChapter } = renderChapters();
 
-  await createNewChapter("2", "2", "second");
-  await createNewChapter("2", "3", "third");
-  await createNewChapter("1", "2", "first");
+  await createNewChapter("4", "5", "second");
+  await createNewChapter("4", "6", "third");
+  await createNewChapter("1", "4", "first");
 
-  const chapters = await screen.findAllByText(/first|second|third/);
-  const chaptersNames = chapters.map((ch) => ch.textContent);
-  expect(chaptersNames).toEqual(["first: 1-2", "second: 2-2", "third: 2-3"]);
+  const chapters = screen.getAllByRole("checkbox");
+  const chaptersNames = chapters.map((ch) =>
+    ch.parentElement.textContent.replace("Delete", "")
+  );
+  expect(chaptersNames).toEqual(["first: 1-4", "second: 4-5", "third: 4-6"]);
 });
 
-it("sets the a chapter selected when its button is clicked", async () => {
-  const { user, createNewChapter, onChapterSelected } = await renderChapters();
-
-  await createNewChapter("1", "1", "chapter");
-  await user.click(await screen.findByRole("button", { name: "Select" }));
-
-  expect(onChapterSelected).toBeCalledWith(new Chapter(1, 1, "chapter"));
+it("sets the a chapter as active it's the active chapter", async () => {
+  const chapter = new Chapter(1, 2, "name");
+  renderChapters([chapter], chapter);
+  expect(screen.getByRole("checkbox", { name: /name/i }).checked).toBe(true);
 });
 
-it("shows the active chapter as selected and deselects it if clicked again", async () => {
-  const chapter = new Chapter(12, 21, "abc");
-  const { user, onChapterUnselected } = await renderChapters([chapter], chapter);
-
-  await user.click(await screen.findByRole("button", { name: "Unselect" }));
-
-  expect(onChapterUnselected).toBeCalled();
-});
-
-it("activates another chapter when selected", async () => {
-  const { user, createNewChapter, onChapterSelected, onChapterUnselected } = await renderChapters();
+it("calls the chapter trigger with the chapter, when selected", async () => {
+  const { user, createNewChapter, onChapterTrigger } = renderChapters();
 
   await createNewChapter("2", "4", "first");
   await createNewChapter("9", "10", "second");
-  const firstChapterElement = await screen.findByText(/first/);
-  const secondChapterElement = await screen.findByText(/second/);
-  await user.click(await within(firstChapterElement.parentElement).findByRole("button", { name: "Select" }));
-  await user.click(await within(secondChapterElement.parentElement).findByRole("button", { name: "Select" }));
+  await user.click(screen.getByRole("checkbox", { name: /first/ }));
+  await user.click(screen.getByRole("checkbox", { name: /second/ }));
 
-  expect(onChapterSelected).toBeCalledTimes(2);
-  expect(onChapterSelected).toBeCalledWith({ start: 2, end: 4, name: "first" });
-  expect(onChapterSelected).toBeCalledWith({ start: 9, end: 10, name: "second" });
+  expect(onChapterTrigger).toBeCalledTimes(2);
+  expect(onChapterTrigger).toBeCalledWith({ start: 2, end: 4, name: "first" });
+  expect(onChapterTrigger).toBeCalledWith({ start: 9, end: 10, name: "second" });
 });
 
-async function renderChapters(savedChapters = [], activeChapter = undefined) {
+it("deletes items when their delete button is clicked", async () => {
+  const { user } = renderChapters([
+    new Chapter(1, 2, "name"),
+    new Chapter(3, 4, "another"),
+  ]);
+  const chapterElement = screen.getByRole("checkbox", { name: /another/i }).parentElement;
+  const deleteButton = within(chapterElement).getByRole("button", { name: "Delete" });
+
+  await user.click(deleteButton);
+
+  expect(screen.getByText(/name/)).toBeInTheDocument();
+  expect(screen.queryByText(/another/)).not.toBeInTheDocument();
+});
+
+it("cancels addition when the cancel button is pressed", async () => {
+  const { user } = renderChapters();
+
+  await user.click(screen.getByRole("button", { name: "Add chapter" }));
+  await user.click(screen.getByRole("button", { name: "Cancel" }));
+
+  expect(screen.queryByLabelText("name|start|end")).not.toBeInTheDocument();
+});
+
+function renderChapters(savedChapters = [], activeChapter = undefined) {
   const user = userEvent.setup();
-  const onChapterSelected = jest.fn();
-  const onChapterUnselected = jest.fn();
+  const onChapterTrigger = jest.fn();
   const utils = render(
     <Chapters
       activeChapter={activeChapter}
       savedChapters={savedChapters}
-      onChapterSelected={onChapterSelected}
-      onChapterUnselected={onChapterUnselected}
+      onChapterTrigger={onChapterTrigger}
     />
   );
   return {
     user,
-    onChapterSelected,
-    onChapterUnselected,
+    onChapterTrigger,
     ...utils,
     async createNewChapter(start, end, name) {
-      await user.type(await screen.findByLabelText(/start/i), start);
-      await user.type(await screen.findByLabelText(/end/i), end);
-      await user.type(await screen.findByLabelText(/name/i), name);
-      await user.click(await screen.findByRole("button", { name: "Save" }));
+      await user.click(screen.getByRole("button", { name: "Add chapter" }));
+      await user.type(screen.getByRole("textbox", { name: /start/i }), start);
+      await user.type(screen.getByRole("textbox", { name: /end/i }), end);
+      await user.type(screen.getByRole("textbox", { name: /name/i }), name);
+      await user.click(screen.getByRole("button", { name: "Save" }));
     },
   };
 }

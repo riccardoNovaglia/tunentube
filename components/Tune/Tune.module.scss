@@ -1,14 +1,21 @@
 .tune {
   padding: 10px;
 
-  border: 1px solid black;
+  border: 1px solid rgb(145, 145, 145);
+  border-bottom: 0;
   border-radius: 10px 10px 0 0;
 
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
 
   label {
     margin-right: 10px;
+  }
+
+  p,
+  input,
+  select {
+    height: auto;
   }
 }
