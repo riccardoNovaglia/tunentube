@@ -23,6 +23,7 @@ export function Playback({ mic, onPlaying }) {
         aria-label="Start playback"
         checked={recording}
         onChange={toggleRecording}
+        disabled={mic === undefined}
       />
     </div>
   );

@@ -1,57 +1,81 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import styles from "./Tune.module.scss";
 
-const cookieName = "preferred-mic";
+const preferredDeviceCookieName = "preferred-mic";
 
 export function Mics({ setMic, disabled }) {
-  const [inputs, setInputs] = useState();
+  const [devices, setDevices] = useState();
   const [selectedMic, setSelectedMic] = useState();
-  const [cookies, setCookie, removeCookie] = useCookies();
-  const preferredCookie = cookies[cookieName];
-
-  const selectMic = useCallback(
-    (selectedMic) => {
-      setMic(selectedMic);
-      setSelectedMic(selectedMic);
-      setCookie(cookieName, selectedMic);
-    },
-    [setCookie, setMic]
-  );
+  const [cookies, setCookie, removeCookie] = useCookies([preferredDeviceCookieName]);
+  const preferredDevice = cookies[preferredDeviceCookieName];
 
   useEffect(() => {
-    navigator.mediaDevices.enumerateDevices().then((devices) => {
-      const inputs = devices.filter((device) => device.kind === "audioinput");
-      setInputs(inputs);
-    });
+    getAudioDevices()
+      .then((devices) => setDevices(devices))
+      .catch(() => setDevices([]));
   }, []);
 
   useEffect(() => {
-    if (inputs === undefined) return;
+    if (devices === undefined) return;
 
-    if (preferredCookie) {
-      if (inputs.some((input) => input.deviceId === preferredCookie)) {
-        selectMic(preferredCookie);
-      } else {
-        removeCookie(cookieName);
-      }
+    if (devices.some((device) => device.deviceId === preferredDevice)) {
+      setSelectedMic(preferredDevice);
+      setMic(preferredDevice);
     } else {
-      selectMic(inputs && inputs.length > 0 && inputs[0].deviceId);
+      removeCookie(preferredDeviceCookieName);
     }
-  }, [inputs, preferredCookie, removeCookie, selectMic]);
+  }, [preferredDevice, setCookie, removeCookie, devices, setMic]);
+
+  function onMicSelection(mic) {
+    setSelectedMic(mic);
+    setMic(mic);
+    setCookie(preferredDeviceCookieName, mic);
+  }
+
+  async function refresh() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const devices = await getAudioDevices();
+      setDevices(devices);
+      setMic(devices[0]);
+      stream.getAudioTracks().forEach((track) => track.stop());
+    } catch (e) {
+      // we didn't get permissions to access mics, not much we can do unless they try again and let us
+    }
+  }
 
   return (
     <div className={styles.mics}>
       <label htmlFor="mics">Microphones</label>
-      {inputs && (
-        <select id="mics" onChange={(e) => selectMic(e.target.value)} value={selectedMic} disabled={disabled}>
-          {inputs.map((input) => (
+      {devices && (
+        <select
+          id="mics"
+          onChange={(e) => onMicSelection(e.target.value)}
+          value={selectedMic}
+          disabled={disabled}
+        >
+          {devices.map((input) => (
             <option key={input.label} value={input.deviceId}>
               {input.label}
             </option>
           ))}
         </select>
       )}
+      <button onClick={refresh} className={styles.refreshMics}>
+        Refresh
+      </button>
     </div>
   );
+}
+
+async function getAudioDevices() {
+  const foundDevices = await navigator.mediaDevices.enumerateDevices();
+  const audioDevices = foundDevices
+    .filter(
+      ({ kind, deviceId, label }) =>
+        kind === "audioinput" && deviceId !== "" && label !== ""
+    )
+    .map(({ deviceId, label }) => ({ deviceId, label }));
+  return audioDevices;
 }

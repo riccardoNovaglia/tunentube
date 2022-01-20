@@ -43,6 +43,7 @@ export function Tuner({ mic, onTuning }) {
         aria-label="Start tuning"
         checked={analysing}
         onChange={toggleTuning}
+        disabled={mic === undefined}
       />
       {analysing && <Note note={note} />}
     </div>
