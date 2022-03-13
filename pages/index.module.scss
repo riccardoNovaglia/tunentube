@@ -8,9 +8,28 @@
   }
 }
 
-.title {
+.header {
   margin: 0;
   padding: 10px 10px;
   background: black;
   border-bottom: 1px solid var(--off-white);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.login {
+  --display: hidden;
+  &:hover,
+  &:focus {
+    --display: visible;
+  }
+
+  a {
+    visibility: var(--display);
+  }
 }

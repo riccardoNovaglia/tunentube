@@ -1,4 +1,8 @@
+import { useEffect, useState } from "react";
 import Head from "next/head";
+import Link from "next/link";
+
+import { supabase } from "../lib/supabaseClient";
 
 import { Tube } from "../components/tube/Tube";
 import { Tune } from "../components/tune/Tune";
@@ -6,6 +10,16 @@ import { Tune } from "../components/tune/Tune";
 import styles from "./index.module.scss";
 
 export default function Home() {
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    setSession(supabase.auth.session());
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
+
   return (
     <>
       <Head>
@@ -13,7 +27,20 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Tune &apos;n&apos; Tube</h1>
+        <div className={styles.header}>
+          <h1 className={styles.title}>Tune &apos;n&apos; Tube</h1>
+          <div className={styles.login}>
+            {session ? (
+              <a href="#" onClick={() => supabase.auth.signOut()}>
+                Logout
+              </a>
+            ) : (
+              <Link href="/login">
+                <a>Login</a>
+              </Link>
+            )}
+          </div>
+        </div>
         <Tube />
         <Tune />
       </main>
