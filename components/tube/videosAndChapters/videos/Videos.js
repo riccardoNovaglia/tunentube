@@ -23,7 +23,9 @@ export function Videos({ setVideo }) {
           title
         )
       `);
-      setVideos(videos);
+      if (videos) {
+        setVideos(videos);
+      }
     }
     fetch();
   }, []);
@@ -35,9 +37,16 @@ export function Videos({ setVideo }) {
       <ul>
         {videos.map((video) => (
           <li key={video.url}>
-            <button key={video.id} onClick={() => setVideo(video.url)}>
+            <a
+              href={video.url}
+              key={video.id}
+              onClick={(event) => {
+                event.preventDefault();
+                setVideo(video.url);
+              }}
+            >
               {video.song.title}
-            </button>
+            </a>
           </li>
         ))}
       </ul>
