@@ -35,9 +35,7 @@ export default function Home() {
                 Logout
               </a>
             ) : (
-              <Link href="/login">
-                <a>Login</a>
-              </Link>
+              <Link href="/login">Login</Link>
             )}
           </div>
         </div>
