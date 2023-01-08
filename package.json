@@ -15,7 +15,7 @@
   "dependencies": {
     "@reach/slider": "0.18.0",
     "@reach/tabs": "0.18.0",
-    "@supabase/supabase-js": "1.29.3",
+    "@supabase/supabase-js": "^2.2.3",
     "@use-it/interval": "1.0.0",
     "next": "13.1.1",
     "pitchfinder": "2.3.2",

@@ -13,7 +13,7 @@ export default function Home() {
   const [session, setSession] = useState(null);
 
   useEffect(() => {
-    setSession(supabase.auth.session());
+    setSession(supabase.auth.getSession());
 
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
