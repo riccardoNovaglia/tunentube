@@ -13,19 +13,19 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@reach/slider": "0.16.0",
-    "@reach/tabs": "0.16.4",
+    "@reach/slider": "0.18.0",
+    "@reach/tabs": "0.18.0",
     "@supabase/supabase-js": "1.29.3",
     "@use-it/interval": "1.0.0",
     "next": "12.0.8",
     "pitchfinder": "2.3.2",
-    "rc-switch": "3.2.2",
+    "rc-switch": "4.0.0",
     "react": "17.0.2",
     "react-cookie": "4.1.1",
-    "react-device-detect": "2.1.2",
+    "react-device-detect": "2.2.2",
     "react-dom": "17.0.2",
-    "react-player": "2.9.0",
-    "sass": "1.48.0"
+    "react-player": "2.11.0",
+    "sass": "1.57.1"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "12.0.8",
