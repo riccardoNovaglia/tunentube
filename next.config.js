@@ -3,6 +3,9 @@ module.exports = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  sassOptions: {
+    fiber: false,
+  },
   async headers() {
     return [
       {
