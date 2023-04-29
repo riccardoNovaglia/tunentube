@@ -6,7 +6,12 @@ import { Videos } from "./videos/Videos";
 import styles from "./VideosAndChapters.module.scss";
 import "@reach/tabs/styles.css";
 
-export function VideosAndChapters({ setVideoToPlay, activeChapter, onChapterTrigger }) {
+export function VideosAndChapters({
+  video,
+  setVideoToPlay,
+  activeChapter,
+  onChapterTrigger,
+}) {
   return (
     <Tabs className={styles.tabs}>
       <TabList className={styles.tabsList}>
@@ -16,7 +21,11 @@ export function VideosAndChapters({ setVideoToPlay, activeChapter, onChapterTrig
 
       <TabPanels className={styles.panels}>
         <TabPanel className={styles.panel}>
-          <Chapters activeChapter={activeChapter} onChapterTrigger={onChapterTrigger} />
+          <Chapters
+            videoId={video?.id}
+            activeChapter={activeChapter}
+            onChapterTrigger={onChapterTrigger}
+          />
         </TabPanel>
         <TabPanel>
           <Videos setVideo={setVideoToPlay} />

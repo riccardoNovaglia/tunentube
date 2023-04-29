@@ -28,7 +28,7 @@ export function Player({ videoToPlay, activeChapter }) {
         <ReactPlayer
           className={styles.player}
           ref={playerRef}
-          url={videoToPlay}
+          url={videoToPlay?.url}
           playing={playing}
           controls={true}
           onPlay={() => setPlaying(true)}

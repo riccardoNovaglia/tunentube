@@ -22,6 +22,7 @@ export function Tube() {
       </div>
       <div className={styles.videosAndChapters}>
         <VideosAndChapters
+          video={videoToPlay}
           setVideoToPlay={setVideoToPlay}
           activeChapter={activeChapter}
           onChapterTrigger={onChapterTrigger}

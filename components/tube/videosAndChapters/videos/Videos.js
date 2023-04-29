@@ -7,7 +7,7 @@ import styles from "./Videos.module.scss";
 export function Videos({ setVideo }) {
   const [videos, setVideos] = useState(startVideos);
   useEffect(() => {
-    setVideo(videos[0].url);
+    setVideo(videos[0]);
   }, [setVideo, videos]);
 
   useEffect(() => {
@@ -19,12 +19,12 @@ export function Videos({ setVideo }) {
       } = await supabase.from("videos").select(`
         id,
         url,
-        song (
-          title
-        )
+        name
       `);
-      if (videos) {
+      if (videos && videos.length > 0) {
         setVideos(videos);
+      } else {
+        console.error(error, status);
       }
     }
     fetch();
@@ -42,10 +42,10 @@ export function Videos({ setVideo }) {
               key={video.id}
               onClick={(event) => {
                 event.preventDefault();
-                setVideo(video.url);
+                setVideo(video);
               }}
             >
-              {video.song.title}
+              {video.name}
             </a>
           </li>
         ))}
@@ -58,27 +58,27 @@ export function Videos({ setVideo }) {
 const startVideos = [
   {
     url: "https://www.youtube.com/watch?v=XtRifYMxXXw",
-    id: "https://www.youtube.com/watch?v=XtRifYMxXXw",
-    song: { title: "Redbone" },
+    id: 991,
+    name: "Redbone",
   },
   {
     url: "https://www.youtube.com/watch?v=vVSn1xindPM",
-    id: "https://www.youtube.com/watch?v=vVSn1xindPM",
-    song: { title: "Californication" },
+    id: 992,
+    name: "Californication",
   },
   {
     url: "https://www.youtube.com/watch?v=XUTCU3v22GI",
-    id: "https://www.youtube.com/watch?v=XUTCU3v22GI",
-    song: { title: "Otherside" },
+    id: 993,
+    name: "Otherside",
   },
   {
     url: "https://www.youtube.com/watch?v=5_SUiiOJtL8",
-    id: "https://www.youtube.com/watch?v=5_SUiiOJtL8",
-    song: { title: "Breathe" },
+    id: 994,
+    name: "Breathe",
   },
   {
     url: "https://www.youtube.com/watch?v=qs9KVyJnKIU",
-    id: "https://www.youtube.com/watch?v=qs9KVyJnKIU",
-    song: { title: "Feeling good" },
+    id: 995,
+    name: "Feeling good",
   },
 ];

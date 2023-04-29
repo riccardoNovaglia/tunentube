@@ -9,7 +9,9 @@ export default function Login() {
     const email = e.target.email.value;
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signIn({ email });
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+      });
       if (error) throw error;
       alert("Check your email for the login link!");
     } catch (error) {

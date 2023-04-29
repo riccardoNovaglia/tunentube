@@ -1,12 +1,13 @@
 export class Chapter {
-  constructor(start, end, name) {
-    this.start = Number.parseFloat(start);
-    this.end = Number.parseFloat(end);
+  constructor(id, start, end, name) {
+    this.id = id;
+    this.start = start;
+    this.end = end;
     this.name = name;
   }
 
-  static fromInput({ start, end, name }) {
-    return new Chapter(start, end, name);
+  static fromInput({ id, start, end, name }) {
+    return new Chapter(id, start, end, name);
   }
 
   get key() {
