@@ -13,8 +13,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@reach/slider": "0.18.0",
-    "@reach/tabs": "0.18.0",
     "@supabase/supabase-js": "2.15.0",
     "@use-it/interval": "1.0.0",
     "next": "13.3.0",
@@ -25,6 +23,7 @@
     "react-device-detect": "2.2.2",
     "react-dom": "18.2.0",
     "react-player": "2.11.0",
+    "react-tabs": "^6.0.1",
     "sass": "1.57.1"
   },
   "devDependencies": {

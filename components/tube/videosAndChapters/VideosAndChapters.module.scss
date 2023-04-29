@@ -1,21 +1,14 @@
 .tabs {
-  display: grid;
-  grid-template-rows: 50px 1fr;
   border-radius: 5px;
   border: 1px solid white;
 }
 
 .tabsList {
+  height: auto;
   padding-left: 10px;
 }
 
 .tab[aria-selected="true"] {
   font-weight: bold;
   backdrop-filter: brightness(140%);
-}
-
-.panels {
-  border: 1px solid grey;
-  border-top: 0;
-  padding: 5px;
 }

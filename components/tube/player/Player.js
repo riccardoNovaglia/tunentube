@@ -1,8 +1,6 @@
 import { useState, useRef } from "react";
-import { Slider } from "@reach/slider";
 import ReactPlayer from "react-player/youtube";
 
-import "@reach/slider/styles.css";
 import styles from "./Player.module.scss";
 
 export function Player({ videoToPlay, activeChapter }) {
@@ -40,9 +38,6 @@ export function Player({ videoToPlay, activeChapter }) {
           width="100%"
           height="100%"
         />
-        {/* TODO: actually control volume and progress, add speed etc */}
-        <Slider orientation="vertical" className={styles.volume} {...fadeInOut} />
-        <Slider orientation="horizontal" className={styles.progress} {...fadeInOut} />
       </div>
     </div>
   );
