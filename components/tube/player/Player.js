@@ -8,11 +8,6 @@ export function Player({ videoToPlay, activeChapter }) {
   const [ctrl, setCtrl] = useState(false);
   const playerRef = useRef();
 
-  const fadeInOut = {
-    onFocus: () => setCtrl(true),
-    onBlur: () => setCtrl(false),
-  };
-
   return (
     <div
       style={{
