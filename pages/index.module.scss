@@ -21,15 +21,3 @@
     margin: 0;
   }
 }
-
-.login {
-  --display: hidden;
-  &:hover,
-  &:focus {
-    --display: visible;
-  }
-
-  a {
-    visibility: var(--display);
-  }
-}

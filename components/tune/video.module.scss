@@ -1,0 +1,21 @@
+.video {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.mainContent {
+  flex: 1 0 auto
+}
+
+.player {
+  flex: 2;
+}
+
+.chapters {
+  flex: 1;
+}
+
+.tune {
+  flex-shrink: 0;
+}

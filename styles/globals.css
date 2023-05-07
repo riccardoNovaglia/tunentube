@@ -10,13 +10,20 @@ body {
   --off-white: rgb(230, 228, 228);
   background: var(--dark-grey);
   color: var(--off-white);
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+main, #__next {
+  display: flex;
+  flex: 1 0 auto;
+  width: 100%;
 }
 
 a {
   color: inherit;
-}
-
-* {
-  box-sizing: border-box;
-  height: 100%;
 }

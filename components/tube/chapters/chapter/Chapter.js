@@ -10,14 +10,6 @@ export class Chapter {
     return new Chapter(id, start, end, name);
   }
 
-  get key() {
-    return `${this.start}-${this.end}-${this.name}`;
-  }
-
-  get paragraph() {
-    return `${this.name}: ${this.start}-${this.end}`;
-  }
-
   isEqualTo(another) {
     return this.start === another?.start && this.end === another?.end;
   }

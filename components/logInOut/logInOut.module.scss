@@ -1,0 +1,16 @@
+.login {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+
+  --display: hidden;
+  &:hover,
+  &:focus {
+    --display: visible;
+  }
+
+  a {
+    display: inline;
+    visibility: var(--display);
+  }
+}

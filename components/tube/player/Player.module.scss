@@ -1,35 +1,3 @@
 .playerWrapper {
-  display: grid;
-  grid-template-rows: auto min-content;
-  grid-template-columns: auto min-content;
-  margin-right: 20px;
-
-  & > * {
-    padding-right: 15px;
-    padding-bottom: 15px;
-  }
-}
-
-.fade {
-  transition: all 0.2s;
-}
-
-.betterFocus {
-  div:focus {
-    outline: 2px solid rgb(255, 136, 0);
-  }
-}
-
-.volume {
-  @extend .fade, .betterFocus;
-  &[data-reach-slider-input][data-orientation="vertical"] {
-    height: 100%;
-    opacity: var(--control-visibility);
-  }
-}
-
-.progress {
-  @extend .fade, .betterFocus;
-  width: 100%;
-  opacity: var(--control-visibility);
+    height: 500px;
 }
