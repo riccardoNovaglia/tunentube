@@ -10,6 +10,7 @@ import styles from "components/tube/video.module.scss";
 export default function Video({ video, chapters: startChapters }) {
   const [activeChapter, setActiveChapter] = useState();
   const [chapters, setChapters] = useState(startChapters);
+  const [duration, setDuration] = useState(0);
 
   async function onChaptesUpdate() {
     const { data: chapters, error } = await getChapters(video.id);
@@ -24,7 +25,7 @@ export default function Video({ video, chapters: startChapters }) {
       </Head>
 
       <div className={styles.player}>
-        <Player activeChapter={activeChapter} video={video} />
+        <Player activeChapter={activeChapter} video={video} onDuration={setDuration} />
       </div>
 
       <div className={styles.chapters}>
@@ -32,7 +33,12 @@ export default function Video({ video, chapters: startChapters }) {
           chapters={chapters}
           onChaptersUpdate={onChaptesUpdate}
           activeChapter={activeChapter}
-          onChapterTrigger={setActiveChapter}
+          onChapterTrigger={(chapter) =>
+            chapter.isEqualTo(activeChapter)
+              ? setActiveChapter(undefined)
+              : setActiveChapter(chapter)
+          }
+          duration={duration}
         />
       </div>
     </>

@@ -1,13 +1,14 @@
 export class Chapter {
-  constructor(id, start, end, name) {
+  constructor(id, start, end, name, isActive) {
     this.id = id;
     this.start = start;
     this.end = end;
     this.name = name;
+    this.isActive = isActive;
   }
 
-  static fromInput({ id, start, end, name }) {
-    return new Chapter(id, start, end, name);
+  static fromInput({ id, start, end, name }, activeChapter) {
+    return new Chapter(id, start, end, name, id === activeChapter?.id);
   }
 
   isEqualTo(another) {

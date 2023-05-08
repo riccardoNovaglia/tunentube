@@ -3,7 +3,7 @@ import ReactPlayer from "react-player/youtube";
 
 import styles from "./Player.module.scss";
 
-export function Player({ video, activeChapter }) {
+export function Player({ video, activeChapter, onDuration }) {
   const [playing, setPlaying] = useState(false);
   const [ctrl, setCtrl] = useState(false);
   const playerRef = useRef();
@@ -33,6 +33,7 @@ export function Player({ video, activeChapter }) {
         onProgress={({ playedSeconds }) =>
           activeChapter?.outsideBounds(playedSeconds) && goTo(activeChapter?.start)
         }
+        onDuration={onDuration}
         progressInterval={50}
         width="100%"
         height="100%"

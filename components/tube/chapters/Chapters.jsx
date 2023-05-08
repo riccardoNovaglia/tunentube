@@ -1,7 +1,9 @@
 import { supabase } from "supabase/client";
 import { useUser } from "supabase/hooks";
 
-import { Chapter as ChapterObj } from "components/tube/chapters/chapter/Chapter";
+import { Chapter } from "./chapter/Chapter.jsx";
+import { Chapter as ChapterObj } from "components/tube/chapters/chapter/Chapter.js";
+
 import styles from "./chapters.module.scss";
 
 export function Chapters({
@@ -9,6 +11,7 @@ export function Chapters({
   onChaptersUpdate,
   activeChapter,
   onChapterTrigger,
+  duration,
 }) {
   const user = useUser();
 
@@ -21,40 +24,25 @@ export function Chapters({
     onChaptersUpdate();
   }
 
-  return (
-    <>
-      {chapters.length > 0 ? (
-        <ul className={styles.chaptersList}>
-          {chapters.map((chapter) => (
-            <li key={chapter.id}>
-              <Chapter
-                chapter={chapter}
-                activeChapter={activeChapter}
-                onChapterTrigger={onChapterTrigger}
-                onDelete={user ? onDelete : undefined}
-              />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No chapters added, yet</p>
-      )}
-    </>
-  );
-}
+  if (chapters.length === 0) return <p>No chapters added, yet</p>;
 
-function Chapter({ chapter: rawChapter, onChapterTrigger, onDelete, activeChapter }) {
-  const chapter = ChapterObj.fromInput(rawChapter);
+  const chaps = chapters
+    .map((chapter) => ChapterObj.fromInput(chapter, activeChapter))
+    .sort((c1, c2) => c1.minus(c2))
+    .map((chapter) => (
+      <li
+        key={chapter.id}
+        className={styles.chapterListItem}
+        onClick={() => onChapterTrigger(chapter)}
+      >
+        <Chapter
+          chapter={chapter}
+          duration={duration}
+          onChapterTrigger={onChapterTrigger}
+          onDelete={user ? onDelete : undefined}
+        />
+      </li>
+    ));
 
-  return (
-    <label>
-      {chapter.name}: {chapter.start}-{chapter.end}
-      <input
-        type="checkbox"
-        checked={chapter.isEqualTo(activeChapter)}
-        onChange={(e) => onChapterTrigger(e.target.checked ? chapter : undefined)}
-      />
-      {onDelete && <button onClick={() => onDelete(chapter.id)}>Delete</button>}
-    </label>
-  );
+  return <ul className={styles.chaptersList}>{chaps}</ul>;
 }
