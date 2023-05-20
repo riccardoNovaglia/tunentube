@@ -14,3 +14,12 @@
     visibility: var(--display);
   }
 }
+
+.loggedIn {
+  border-radius: 50%;
+  background-color: red;
+  height: 5px;
+  width: 5px;
+  margin-right: 5px;
+  margin-left: auto;
+}

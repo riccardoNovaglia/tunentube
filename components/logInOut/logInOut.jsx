@@ -10,15 +10,18 @@ export function LogInOut() {
   return (
     <div className={styles.login}>
       {session ? (
-        <a
-          href="#"
-          onClick={() => {
-            supabase.auth.signOut();
-            setSession(null);
-          }}
-        >
-          Logout
-        </a>
+        <>
+          <div className={styles.loggedIn} />
+          <a
+            href="#"
+            onClick={() => {
+              supabase.auth.signOut();
+              setSession(null);
+            }}
+          >
+            Logout
+          </a>
+        </>
       ) : (
         <Link href="/login">Login</Link>
       )}
