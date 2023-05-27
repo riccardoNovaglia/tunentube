@@ -41,8 +41,8 @@ export function Speed({ speed, onSpeedChange }) {
   const { precise } = usePrecision();
   const step = precise ? 0.05 : 0.15;
   useKeyboardControls({
-    faster: () => onSpeedChange(speed + step),
-    slower: () => onSpeedChange(speed - step),
+    faster: () => onSpeedChange(speed + step < 1 ? speed + step : 1),
+    slower: () => onSpeedChange(speed - step > 0.25 ? speed - step : 0.25),
   });
   return (
     <div className={styles.speed}>
