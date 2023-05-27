@@ -7,8 +7,11 @@ export class Chapter {
     this.isActive = isActive;
   }
 
-  static fromInput({ id, start, end, name }, activeChapter) {
+  static fromData({ id, start, end, name }, activeChapter) {
     return new Chapter(id, start, end, name, id === activeChapter?.id);
+  }
+  static fromForm({ start, end, name }) {
+    return new Chapter(null, start, end, name, false);
   }
 
   isEqualTo(another) {
@@ -19,7 +22,7 @@ export class Chapter {
     if (!this.start || !this.end || !this.name) {
       return "Please add a start, end, name";
     }
-    if (this.start < 0 && this.end < 1) {
+    if (this.start < 0 || this.end < 1) {
       return "Start and end must be positive numbers!";
     }
     if (this.start > this.end) {

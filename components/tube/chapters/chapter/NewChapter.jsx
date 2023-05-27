@@ -1,44 +1,39 @@
 import { useState } from "react";
 import { Chapter } from "./Chapter";
-import styles from "./Chapter.module.scss";
+import styles from "./chapter.module.scss";
 
 export function NewChapter({ onNewChapter }) {
-  const [chapter, setChapter] = useState({});
   const [error, setError] = useState();
 
   function onSubmit(event) {
     event.preventDefault();
-    const newChap = Chapter.fromInput(chapter);
+    const { name, start, end } = event.target;
+    const newChap = Chapter.fromForm({
+      name: name.value,
+      start: Number(start.value),
+      end: Number(end.value),
+    });
     const error = newChap.isValid();
     if (!error) {
       onNewChapter(newChap);
-      setChapter({});
     } else {
       setError(error);
     }
-  }
-
-  function update(e) {
-    setChapter({
-      ...chapter,
-      [e.target.name]: e.target.value,
-    });
-    setError();
   }
 
   return (
     <form onSubmit={onSubmit} className={styles.newChapter}>
       <label>
         Name
-        <input type="text" name="name" value={chapter?.name || ""} onChange={update} />
+        <input type="text" name="name" />
       </label>
       <label>
         Start
-        <input type="float" name="start" value={chapter?.start || ""} onChange={update} />
+        <input type="float" name="start" />
       </label>
       <label>
         End
-        <input type="float" name="end" value={chapter?.end || ""} onChange={update} />
+        <input type="float" name="end" />
       </label>
 
       <button className={styles.save} type="submit">

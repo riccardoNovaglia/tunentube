@@ -39,6 +39,7 @@ export default function Video({ video, chapters: startChapters }) {
               : setActiveChapter(chapter)
           }
           duration={duration}
+          videoId={video.id}
         />
       </div>
     </>
