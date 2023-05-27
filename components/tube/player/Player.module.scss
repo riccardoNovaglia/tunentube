@@ -1,3 +1,50 @@
 .playerWrapper {
-    height: 500px;
+  height: 500px;
+}
+
+.speed {
+  width: 30%;
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 3rem;
+  padding: 0.5rem 0 0 0.5rem;
+
+  input,
+  p {
+    height: 80%;
+  }
+  p {
+    margin: 0;
+    font-size: 0.8rem;
+    padding-left: 1rem;
+  }
+
+  --speed-buttons-display: none;
+  --background-color: none;
+  // --speed-buttons-display: flex;
+  // --background-color: #7f7f7f;
+
+  &:hover {
+    --speed-buttons-display: flex;
+    --background-color: #7f7f7f;
+  }
+
+  background-color: var(--background-color);
+  border-radius: 4px 4px 0 0;
+
+  .speedButtons {
+    position: absolute;
+    bottom: -80%;
+    width: 100%;
+    display: var(--speed-buttons-display);
+    justify-content: space-evenly;
+    background-color: var(--background-color);
+    border-radius: 0 0 4px 4px;
+    padding-bottom: 0.1rem;
+  }
+}
+
+.divider {
+  border-width: 0.5px;
+  border-color: grey;
 }
