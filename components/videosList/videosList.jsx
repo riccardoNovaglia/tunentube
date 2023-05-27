@@ -1,11 +1,15 @@
 import Link from "next/link";
+import { supabase } from "supabase/client";
 import { useSession } from "supabase/hooks";
 
+import styles from "./videos.module.scss";
+
 export function VideosList({ videos }) {
-  const [session, setSession] = useSession();
+  const [session] = useSession();
+  const [adding, setAdding] = useSession(false);
 
   return (
-    <>
+    <div className={styles.videosList}>
       <ul>
         {videos.map((video) => {
           return (
@@ -17,9 +21,34 @@ export function VideosList({ videos }) {
       </ul>
       {session && (
         <div>
-          <button>Add video</button>
+          <button onClick={() => setAdding(true)}>Add video</button>
         </div>
       )}
-    </>
+      {adding === true && (
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const {
+              name: { value: nameValue },
+              url: { value: urlValue },
+            } = e.target;
+            const { error } = await supabase
+              .from("videos")
+              .insert([{ name: nameValue, url: urlValue }]);
+            if (!error) location.reload();
+          }}
+        >
+          <label>
+            Name:
+            <input name="name" required></input>
+          </label>
+          <label>
+            Url:
+            <input name="url" required></input>
+          </label>
+          <button>Save</button>
+        </form>
+      )}
+    </div>
   );
 }
