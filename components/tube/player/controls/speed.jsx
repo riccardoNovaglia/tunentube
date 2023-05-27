@@ -22,22 +22,39 @@ function usePrecision() {
   }, []);
   return { precise };
 }
+function useKeyboardControls({ faster, slower }) {
+  useEffect(() => {
+    function handleKeydown(e) {
+      if (e.key === ">") faster();
+      if (e.key === "<") slower();
+    }
+
+    document.addEventListener("keydown", handleKeydown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeydown);
+    };
+  }, [faster, slower]);
+}
 
 export function Speed({ speed, onSpeedChange }) {
   const { precise } = usePrecision();
+  const step = precise ? 0.05 : 0.15;
+  useKeyboardControls({
+    faster: () => onSpeedChange(speed + step),
+    slower: () => onSpeedChange(speed - step),
+  });
   return (
     <div className={styles.speed}>
       <input
         type="range"
-        onChange={(e) => {
-          return onSpeedChange(Number(e.target.value));
-        }}
+        onChange={(e) => onSpeedChange(Number(e.target.value))}
         min={0.25}
         max={1}
-        step={precise ? 0.05 : 0.15}
+        step={step}
         value={speed}
       />
-      <p>{speed}</p>
+      <p>{speed.toPrecision(2)}</p>
       <div className={styles.speedButtons}>
         <button onClick={() => onSpeedChange(0.25)}>0.25</button>
         <button onClick={() => onSpeedChange(0.5)}>0.50</button>
