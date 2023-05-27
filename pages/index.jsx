@@ -4,7 +4,6 @@ import { supabase } from "supabase/client";
 import { VideosList } from "components/videosList/videosList";
 
 import styles from "./index.module.scss";
-import * as layoutStyles from "components/layout.module.scss";
 
 export default function Home({ videos }) {
   return (
@@ -17,9 +16,11 @@ export default function Home({ videos }) {
         <h1 className={styles.title}>Tune &apos;n&apos; Tube</h1>
       </header>
 
-      <main className={layoutStyles.mainContent}>
-        <VideosList videos={videos} />
-      </main>
+      <div className="mainContent">
+        <main>
+          <VideosList videos={videos} />
+        </main>
+      </div>
     </>
   );
 }
