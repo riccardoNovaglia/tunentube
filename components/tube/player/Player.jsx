@@ -4,8 +4,23 @@ import ReactPlayer from "react-player/youtube";
 import styles from "./Player.module.scss";
 import { Speed } from "./controls/speed";
 
+function useKeyboardControls({ togglePlaying }) {
+  useEffect(() => {
+    function handleKeydown(e) {
+      if (e.key === " ") togglePlaying();
+    }
+
+    document.addEventListener("keydown", handleKeydown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeydown);
+    };
+  }, [togglePlaying]);
+}
+
 export function Player({ video, activeChapter, onDuration }) {
   const [playing, setPlaying] = useState(false);
+  useKeyboardControls({ togglePlaying: () => setPlaying(!playing) });
   const [ctrl, setCtrl] = useState(false);
 
   const [speed, setSpeed] = useState(1);
