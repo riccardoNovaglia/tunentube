@@ -12,7 +12,7 @@ export function useUser() {
     }
     getUser();
   }, []);
-  return { user };
+  return user;
 }
 
 export function useSession() {

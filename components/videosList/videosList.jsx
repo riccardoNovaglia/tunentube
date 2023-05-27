@@ -1,12 +1,13 @@
 import Link from "next/link";
+import { useState } from "react";
 import { supabase } from "supabase/client";
-import { useSession } from "supabase/hooks";
+import { useUser } from "supabase/hooks";
 
 import styles from "./videos.module.scss";
 
 export function VideosList({ videos }) {
-  const [session] = useSession();
-  const [adding, setAdding] = useSession(false);
+  const user = useUser();
+  const [adding, setAdding] = useState(false);
 
   return (
     <div className={styles.videosList}>
@@ -19,7 +20,7 @@ export function VideosList({ videos }) {
           );
         })}
       </ul>
-      {session && (
+      {user && (
         <div>
           <button onClick={() => setAdding(true)}>Add video</button>
         </div>
