@@ -11,6 +11,9 @@ export default function Login() {
       setLoading(true);
       const { error } = await supabase.auth.signInWithOtp({
         email,
+        options: {
+          emailRedirectTo: "https://tunentube.vercel.app",
+        },
       });
       if (error) throw error;
       alert("Check your email for the login link!");
