@@ -5,5 +5,8 @@
     "db": 54322,
     "studio": 54323
   },
-  "dbVersion": "140001"
+  "dbVersion": "140001",
+  "auth": {
+    "site_url": "https://tunentube.vercel.app"
+  }
 }
