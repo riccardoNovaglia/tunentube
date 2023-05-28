@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import speedometer from "bootstrap-icons/icons/speedometer.svg";
 
 import styles from "../Player.module.scss";
+import Image from "next/image";
 
 function usePrecision() {
   const [precise, setPrecise] = useState(false);
@@ -46,7 +48,9 @@ export function Speed({ speed, onSpeedChange }) {
   });
   return (
     <div className={styles.speed}>
+      <Image src={speedometer} alt="speedometer" aria-hidden="true" />
       <input
+        aria-label="playback speed"
         type="range"
         onChange={(e) => onSpeedChange(Number(e.target.value))}
         min={0.25}

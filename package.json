@@ -15,6 +15,7 @@
   "dependencies": {
     "@supabase/supabase-js": "2.15.0",
     "@use-it/interval": "1.0.0",
+    "bootstrap-icons": "^1.10.5",
     "next": "13.3.0",
     "pitchfinder": "2.3.2",
     "rc-switch": "4.0.0",
