@@ -23,6 +23,7 @@
     "react-cookie": "4.1.1",
     "react-device-detect": "2.2.2",
     "react-dom": "18.2.0",
+    "react-gauge-chart": "^0.4.1",
     "react-player": "2.11.0",
     "react-tabs": "^6.0.1",
     "sass": "1.57.1"

@@ -4,6 +4,7 @@ import Switch from "rc-switch";
 import { useAudioAnalyser } from "./useSoundAnalyser";
 import { getNote } from "../playback/noteFinder";
 import styles from "../Tune.module.scss";
+import GaugeChart from "react-gauge-chart";
 
 export function Tuner({ mic, onTuning }) {
   const [note, setNote] = useState(undefined);
@@ -16,13 +17,14 @@ export function Tuner({ mic, onTuning }) {
 
   useInterval(
     () => {
+      console.log("doing a thing");
       const audioData = getAudioData();
       const note = getNote(audioData);
       if (note) {
         setNote(note);
       }
     },
-    analysing ? 50 : null
+    analysing ? 100 : null
   );
 
   const toggleTuning = () => {
@@ -45,7 +47,8 @@ export function Tuner({ mic, onTuning }) {
         onChange={toggleTuning}
         disabled={mic === undefined}
       />
-      {analysing && <Note note={note} />}
+      {/* {analysing && <Note note={note} />} */}
+      {analysing && <Gauge note={note} />}
     </div>
   );
 }
@@ -67,6 +70,27 @@ export function Note({ note }) {
         value={note.cents}
         onChange={() => {}}
         disabled
+      />
+    </>
+  );
+}
+
+function Gauge({ note }) {
+  if (!note) return <></>;
+
+  const notePct = (note.cents + 100) / 200;
+  const textColor = notePct > 0.45 && notePct < 0.55 ? "#1cde50" : "#ffda5f";
+
+  return (
+    <>
+      <p>{notePct}</p>
+      <GaugeChart
+        id="gauge-chart2"
+        colors={["#ffda5f", "#1cde50", "#ffda5f"]}
+        percent={notePct}
+        animate={false}
+        formatTextValue={() => note.name}
+        textColor={textColor}
       />
     </>
   );
