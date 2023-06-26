@@ -19,16 +19,17 @@ export class Chapter {
   }
 
   isValid() {
-    if (!!this.start || !!this.end || !!this.name) {
+    const { start, end, name } = this;
+    if (!end || !name) {
       return "Please add a start, end, name";
     }
-    if (this.start < 0 || this.end < 1) {
+    if (start < 0 || end < 1) {
       return "Start and end must be positive numbers!";
     }
-    if (this.start > this.end) {
+    if (start > end) {
       return "The end must be after the start!";
     }
-    if (this.start === this.end) {
+    if (start === end) {
       return "Start and end must be further from each other!";
     }
   }
