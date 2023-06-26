@@ -7,6 +7,6 @@
   },
   "dbVersion": "140001",
   "auth": {
-    "site_url": "https://tunentube.vercel.app"
+    "siteUrl": "https://tunentube.vercel.app"
   }
 }
