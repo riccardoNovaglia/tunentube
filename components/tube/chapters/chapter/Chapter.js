@@ -19,7 +19,7 @@ export class Chapter {
   }
 
   isValid() {
-    if (!this.start || !this.end || !this.name) {
+    if (!!this.start || !!this.end || !!this.name) {
       return "Please add a start, end, name";
     }
     if (this.start < 0 || this.end < 1) {
